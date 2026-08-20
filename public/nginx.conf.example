@@ -1,0 +1,25 @@
+# Nginx Production Security Headers Configuration Example for Zyra Store
+
+server {
+    listen 443 ssl http2;
+    server_name zyrastore.com www.zyrastore.com;
+
+    # SSL Certificates Configuration
+    # ssl_certificate /etc/letsencrypt/live/zyrastore.com/fullchain.pem;
+    # ssl_certificate_key /etc/letsencrypt/live/zyrastore.com/privkey.pem;
+
+    # OWASP Recommended Security Headers
+    add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://zyrastore.tebex.io https://discord.gg; media-src 'self' https://d8j0ntlcm91z4.cloudfront.net; frame-ancestors 'none'; object-src 'none'; upgrade-insecure-requests;" always;
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
+    add_header X-Frame-Options "DENY" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    add_header Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(self \"https://zyrastore.tebex.io\")" always;
+
+    root /var/www/zyrastore/dist;
+    index index.html;
+
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+}
