@@ -93,7 +93,7 @@ export function ZyraCinematicLanding() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close mobile menu on Escape key or outside click
+  // Close mobile menu on Escape key or outside click & Lock body scroll
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && mobileMenuOpen) {
@@ -107,10 +107,15 @@ export function ZyraCinematicLanding() {
     };
 
     if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
       window.addEventListener('keydown', handleKeyDown);
       document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.body.style.overflow = '';
     }
+
     return () => {
+      document.body.style.overflow = '';
       window.removeEventListener('keydown', handleKeyDown);
       document.removeEventListener('mousedown', handleClickOutside);
     };
@@ -143,31 +148,40 @@ export function ZyraCinematicLanding() {
         Saltar al contenido principal
       </a>
 
+      {/* Backdrop Backdrop Overlay for Mobile Drawer */}
+      {mobileMenuOpen && (
+        <div
+          className="fixed inset-0 z-[80] bg-black/70 backdrop-blur-sm lg:hidden transition-opacity animate-in fade-in duration-200"
+          onClick={() => setMobileMenuOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+
       {/* Header & Navigation */}
-      <header className="fixed top-3 left-0 right-0 z-50 flex justify-center px-3 sm:px-4 transition-all duration-300">
+      <header className="fixed top-2.5 sm:top-3 left-0 right-0 z-50 flex justify-center px-2.5 sm:px-4 transition-all duration-300">
         <nav
           aria-label="Navegación principal"
-          className={`w-full max-w-6xl px-4 sm:px-6 py-2.5 rounded-full liquid-glass border transition-all duration-300 bg-[var(--color-glass-bg)] border-[var(--color-glass-border)] text-[var(--color-text)] shadow-2xl relative ${
-            isScrolled ? 'max-w-5xl py-2 shadow-xl' : ''
+          className={`w-full max-w-6xl px-3 sm:px-6 py-2 rounded-full liquid-glass border transition-all duration-300 bg-[var(--color-glass-bg)] border-[var(--color-glass-border)] text-[var(--color-text)] shadow-2xl relative ${
+            isScrolled ? 'max-w-5xl py-1.5 sm:py-2 shadow-xl' : ''
           }`}
           style={{ overflow: 'visible' }}
         >
-          <div className="flex items-center justify-between gap-2 sm:gap-4">
+          <div className="flex items-center justify-between gap-1.5 sm:gap-4">
             {/* Logo */}
             <a
               href="#hero"
               aria-label="Zyra Store - Ir al inicio"
-              className="flex items-center gap-2 focus-visible:ring-2 focus-visible:ring-current rounded-xl p-1 shrink-0"
+              className="flex items-center gap-1.5 sm:gap-2 focus-visible:ring-2 focus-visible:ring-current rounded-xl p-1 shrink-0"
             >
               <img
                 src="/assets/zyra_logo.png"
                 alt="Logo Zyra Store"
                 width="32"
                 height="32"
-                className="w-8 h-8 object-contain filter drop-shadow-[0_2px_10px_rgba(0,0,0,0.3)]"
+                className="w-7 h-7 sm:w-8 sm:h-8 object-contain filter drop-shadow-[0_2px_10px_rgba(0,0,0,0.3)]"
               />
-              <span className="brand-logo-text font-heading font-black text-base sm:text-lg tracking-tight text-[var(--color-text)] uppercase whitespace-nowrap">
-                ZYRA STORE
+              <span className="brand-logo-text font-heading font-black text-xs xs:text-sm sm:text-lg tracking-tight text-[var(--color-text)] uppercase whitespace-nowrap">
+                ZYRA <span className="hidden xs:inline">STORE</span>
               </span>
             </a>
 
@@ -196,7 +210,7 @@ export function ZyraCinematicLanding() {
               ))}
             </ul>
 
-            {/* Actions: 25-Flag Language Selector + Theme Toggle + Small Visible Tebex CTA */}
+            {/* Desktop Actions */}
             <div className="hidden lg:flex items-center gap-2 xl:gap-3 shrink-0">
               <LanguageSelector />
 
@@ -205,7 +219,7 @@ export function ZyraCinematicLanding() {
                 type="button"
                 aria-label={theme === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
                 title={theme === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
-                className="p-1 text-[var(--color-text)] opacity-90 hover:opacity-100 transition-opacity border-0 bg-transparent min-h-[44px] min-w-[44px] flex items-center justify-center cursor-pointer active:scale-95 shrink-0"
+                className="p-1 text-[var(--color-text)] opacity-90 hover:opacity-100 transition-opacity border-0 bg-transparent min-h-[40px] min-w-[40px] flex items-center justify-center cursor-pointer active:scale-95 shrink-0"
               >
                 <ToggleIcon size={24} className="text-[var(--color-text)]" />
               </button>
@@ -214,23 +228,23 @@ export function ZyraCinematicLanding() {
                 href={siteConfig.links.tebexStore}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="py-2 px-4 rounded-full bg-[var(--color-btn-primary-bg)] text-[var(--color-btn-primary-text)] text-xs font-extrabold transition-all hover:opacity-95 shadow-md shrink-0 cursor-pointer min-h-[44px] flex items-center justify-center"
+                className="py-2 px-4 rounded-full bg-[var(--color-btn-primary-bg)] text-[var(--color-btn-primary-text)] text-xs font-extrabold transition-all hover:opacity-95 shadow-md shrink-0 cursor-pointer min-h-[40px] flex items-center justify-center"
               >
                 <span>Tienda Tebex</span>
               </SafeExternalLink>
             </div>
 
             {/* Mobile / Tablet Responsive Controls */}
-            <div className="lg:hidden flex items-center gap-1.5">
+            <div className="lg:hidden flex items-center gap-1 sm:gap-1.5 shrink-0">
               <LanguageSelector />
 
               <button
                 onClick={toggleTheme}
                 type="button"
                 aria-label={theme === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
-                className="p-1 text-[var(--color-text)] opacity-90 hover:opacity-100 transition-opacity border-0 bg-transparent min-h-[44px] min-w-[44px] flex items-center justify-center cursor-pointer"
+                className="p-1 text-[var(--color-text)] opacity-90 hover:opacity-100 transition-opacity border-0 bg-transparent min-h-[38px] min-w-[38px] flex items-center justify-center cursor-pointer active:scale-95"
               >
-                <ToggleIcon size={24} className="text-[var(--color-text)]" />
+                <ToggleIcon size={22} className="text-[var(--color-text)]" />
               </button>
 
               <button
@@ -239,61 +253,83 @@ export function ZyraCinematicLanding() {
                 aria-expanded={mobileMenuOpen}
                 aria-controls="mobile-navigation"
                 aria-label={mobileMenuOpen ? t.nav.closeMenu : t.nav.openMenu}
-                className="p-2 rounded-full border border-[var(--color-border)] bg-[var(--color-surface-soft)] text-[var(--color-text)] min-h-[44px] min-w-[44px] flex items-center justify-center cursor-pointer"
+                className="p-1.5 rounded-full border border-[var(--color-border)] bg-[var(--color-surface-soft)] text-[var(--color-text)] min-h-[38px] min-w-[38px] flex items-center justify-center cursor-pointer active:scale-95"
               >
-                {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+                {mobileMenuOpen ? <X className="w-4 h-4 sm:w-5 sm:h-5" /> : <Menu className="w-4 h-4 sm:w-5 sm:h-5" />}
               </button>
             </div>
           </div>
-
-          {/* Accessible Mobile Menu */}
-          {mobileMenuOpen && (
-            <div
-              id="mobile-navigation"
-              ref={mobileMenuRef}
-              className="lg:hidden mt-3 pt-3 border-t border-[var(--color-border-soft)] flex flex-col gap-2 p-4 rounded-3xl bg-[var(--color-surface)] text-[var(--color-text)] shadow-2xl animate-in fade-in zoom-in-95 duration-200"
-            >
-              <ul className="flex flex-col gap-1 m-0 p-0 list-none text-left">
-                {navLinks.map((link) => (
-                  <li key={link.name}>
-                    {link.external ? (
-                      <SafeExternalLink
-                        href={link.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={() => setMobileMenuOpen(false)}
-                        className="py-3 px-4 text-sm font-extrabold border-b border-[var(--color-border-soft)] flex items-center justify-between rounded-xl text-[var(--color-text)] hover:bg-[var(--color-surface-soft)] transition-colors min-h-[44px]"
-                      >
-                        <span>{link.name}</span>
-                      </SafeExternalLink>
-                    ) : (
-                      <a
-                        href={link.href}
-                        onClick={() => setMobileMenuOpen(false)}
-                        className="py-3 px-4 text-sm font-extrabold border-b border-[var(--color-border-soft)] block rounded-xl text-[var(--color-text)] hover:bg-[var(--color-surface-soft)] transition-colors min-h-[44px] flex items-center"
-                      >
-                        {link.name}
-                      </a>
-                    )}
-                  </li>
-                ))}
-              </ul>
-              <div className="flex flex-col gap-2 mt-3 pt-2">
-                <SafeExternalLink
-                  href={siteConfig.links.tebexStore}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="w-full py-3 px-4 rounded-full bg-[var(--color-btn-primary-bg)] text-[var(--color-btn-primary-text)] text-xs font-extrabold flex items-center justify-center gap-2 shadow-md cursor-pointer min-h-[44px]"
-                >
-                  <span>Tienda Tebex</span>
-                  <ArrowRight size={15} />
-                </SafeExternalLink>
-              </div>
-            </div>
-          )}
         </nav>
       </header>
+
+      {/* Floating Glassmorphic Mobile Drawer Overlay */}
+      {mobileMenuOpen && (
+        <div
+          id="mobile-navigation"
+          ref={mobileMenuRef}
+          className="fixed top-16 left-3 right-3 z-[90] lg:hidden max-h-[82vh] overflow-y-auto p-5 rounded-3xl liquid-glass border border-[var(--color-glass-border)] bg-[var(--color-glass-bg)] text-[var(--color-text)] shadow-2xl backdrop-blur-2xl animate-in slide-in-from-top-4 duration-300 flex flex-col gap-4 text-left"
+        >
+          {/* Drawer Top Header info */}
+          <div className="flex items-center justify-between pb-3 border-b border-[var(--color-border-soft)]">
+            <div className="flex items-center gap-2">
+              <img src="/assets/zyra_logo.png" alt="Zyra Logo" className="w-6 h-6 object-contain" />
+              <span className="font-heading font-black text-sm text-[var(--color-text)] tracking-wider uppercase">
+                MENÚ DE NAVEGACIÓN
+              </span>
+            </div>
+            <button
+              onClick={() => setMobileMenuOpen(false)}
+              aria-label="Cerrar menú"
+              className="p-1.5 rounded-full bg-[var(--color-surface-soft)] text-[var(--color-text)] border border-[var(--color-border-soft)] cursor-pointer"
+            >
+              <X size={16} />
+            </button>
+          </div>
+
+          {/* Navigation Links */}
+          <ul className="flex flex-col gap-1.5 m-0 p-0 list-none text-left">
+            {navLinks.map((link) => (
+              <li key={link.name}>
+                {link.external ? (
+                  <SafeExternalLink
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="py-3 px-4 text-xs sm:text-sm font-extrabold rounded-2xl flex items-center justify-between text-[var(--color-text)] bg-[var(--color-surface-soft)] hover:bg-[var(--color-surface-hover)] border border-[var(--color-border-soft)] transition-all min-h-[44px]"
+                  >
+                    <span>{link.name}</span>
+                    <ArrowRight size={14} className="opacity-70" />
+                  </SafeExternalLink>
+                ) : (
+                  <a
+                    href={link.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="py-3 px-4 text-xs sm:text-sm font-extrabold rounded-2xl flex items-center justify-between text-[var(--color-text)] bg-[var(--color-surface-soft)] hover:bg-[var(--color-surface-hover)] border border-[var(--color-border-soft)] transition-all min-h-[44px]"
+                  >
+                    <span>{link.name}</span>
+                    <ArrowRight size={14} className="opacity-70" />
+                  </a>
+                )}
+              </li>
+            ))}
+          </ul>
+
+          {/* Direct Convert Action Buttons */}
+          <div className="flex flex-col gap-2 pt-2 border-t border-[var(--color-border-soft)]">
+            <SafeExternalLink
+              href={siteConfig.links.tebexStore}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setMobileMenuOpen(false)}
+              className="w-full py-3.5 px-4 rounded-full bg-[var(--color-btn-primary-bg)] text-[var(--color-btn-primary-text)] text-xs font-extrabold flex items-center justify-center gap-2 shadow-lg cursor-pointer min-h-[44px] active:scale-[0.98]"
+            >
+              <span>Comprar en Tebex Store</span>
+              <ArrowRight size={15} />
+            </SafeExternalLink>
+          </div>
+        </div>
+      )}
 
       {/* Main Content */}
       <main id="main-content" tabIndex={-1} className="relative z-10 pt-24 outline-none">
